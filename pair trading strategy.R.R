@@ -1,4 +1,4 @@
-#Marshall Wace!!!
+
 #library
 library(quantmod)
 library(lmtest)
