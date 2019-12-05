@@ -20,10 +20,10 @@ stock1$`600170.SS.Close`
 #Combine return
 return_s1=ROC(stock1$`600170.SS.Close`)
 return_s2=ROC(stock2$`601668.SS.Close`)
-return_all=cbind(return_s1,return_s2)
-
+return
 #Descriptive statistics
 return_all=na.omit(return_all)
+colnames(return_all)=c("600170.SS.Close","601668.SS.Close")
 f_table=function(x){
   table=matrix(NA,nrow=2,ncol=6)
   for (i in 1:2) {
@@ -36,7 +36,7 @@ f_table=function(x){
     table[i,6]=length(series)
   }
   colnames(table)=c("mean","min","median","max","sd","number")
-  row.names(table)=c("TECHM","HCLTECH")
+  row.names(table)=c(`600170.SS`,`601668.SS`)
   table=round(table,3)
   return(table)
 }
@@ -55,6 +55,7 @@ write.csv(Cor_table,"~/Cor_table.csv")
 adf.test(return_all$`600170.SS.Close`)
 adf.test(return_all$`601668.SS.Close`)
 
+return_all
 #plot the return
 par(mfrow=c(1,1))
 plot(return_all[,1],main="stock1",ylab="return")
@@ -134,7 +135,6 @@ portfolio=na.omit(portfolio)
 portfolio=portfolio[portfolio!=Inf & portfolio!=-Inf]
 
 charts.PerformanceSummary(trade_return)
-
 
 
 
