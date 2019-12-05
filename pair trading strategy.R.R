@@ -12,14 +12,14 @@ library(vars)
 library(rugarch)
 #library(knitr)
 
-
 #read datas
 stock1=getSymbols("600170.SS", auto.assign=F, from="2018-01-01", to="2019-01-01", src = "yahoo")
 stock2=getSymbols("601668.SS", auto.assign=F, from="2018-01-01", to="2019-01-01", src = "yahoo")
-
+head(stock1)
+stock1$``600170.SS.Close``
 #Combine return
-return_s1=ROC(stock1$TECHM.NS.Close)
-return_s2=ROC(stock2$HCLTECH.NS.Close)
+return_s1=ROC(stock1$`600170.SS.Close`)
+return_s2=ROC(stock2$`6001668.SS.Close`)
 return_all=cbind(return_s1,return_s2)
 
 #Descriptive statistics
@@ -52,8 +52,8 @@ Cor_table
 write.csv(Cor_table,"~/Cor_table.csv")
 
 #Stationary
-adf.test(return_all$TECHM.NS.Close)
-adf.test(return_all$HCLTECH.NS.Close)
+adf.test(return_all$`600170.SS.Close`)
+adf.test(return_all$`6001668.SS.Close`)
 
 #plot the return
 par(mfrow=c(1,1))
@@ -76,30 +76,30 @@ write.csv(garchfit_1@fit$robust.matcoef,"~/garch_1.csv")
 
 #VAR
 var_model=VAR(return_all,ic="AIC",lag.max=5)
-causality(var_model,cause =return_all$HCLTECH.NS.Close)
+causality(var_model,cause =return_all$`6001668.SS.Close`)
 Acoef(var_model)
 Bcoef(var_model)
 coefficients=coef(var_model)
-coefficients$TECHM.NS.Close
+coefficients$`600170.SS.Close`
 
 #regression
-stock1_ex=cbind(stock1,return=ROC(stock1$TECHM.NS.Close))
+stock1_ex=cbind(stock1,return=ROC(stock1$`600170.SS.Close`))
 stock1_ex=na.omit(stock1_ex)
-stock2_ex=cbind(stock2,return=ROC(stock2$HCLTECH.NS.Close))
+stock2_ex=cbind(stock2,return=ROC(stock2$`6001668.SS.Close`))
 stock2_ex=na.omit(stock2_ex)
 
-re_stock1=lm(stock1_ex$TECHM.NS.Close.1~lag(stock1_ex$TECHM.NS.Close.1,1)+stock1_ex$TECHM.NS.Volume
-             +lag(stock1_ex$TECHM.NS.Volume,1))
+re_stock1=lm(stock1_ex$`600170.SS.Close`.1~lag(stock1_ex$`600170.SS.Close`.1,1)+stock1_ex$`600170.SS.Volume`
+             +lag(stock1_ex$`600170.SS.Volume`,1))
 summary(re_stock1)
 
-re_stock2=lm(stock2_ex$HCLTECH.NS.Close.1~lag(stock2_ex$HCLTECH.NS.Close.1,1)+stock2_ex$HCLTECH.NS.Volume
-             +lag(stock2_ex$HCLTECH.NS.Volume,1))
+re_stock2=lm(stock2_ex$`6001668.SS.Close`.1~lag(stock2_ex$`6001668.SS.Close`.1,1)+stock2_ex$`601668.SS.Volume`
+             +lag(stock2_ex$`601668.SS.Volume`,1))
 summary(re_stock2)
 
 stargazer(re_stock2,type="html",out="stock1.htm",report="vc*t",align=T)
 
 #trading strategy one: moving average
-raw=stock1$TECHM.NS.Close
+raw=stock1$`600170.SS.Close`
 data=return_all[,1]
 sma=SMA(data,n=9)
 macd=MACD(raw,12,26,9)
@@ -134,6 +134,14 @@ portfolio=na.omit(portfolio)
 portfolio=portfolio[portfolio!=Inf & portfolio!=-Inf]
 
 charts.PerformanceSummary(trade_return)
+
+
+
+
+
+
+
+
 
 
 
