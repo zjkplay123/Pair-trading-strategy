@@ -16,7 +16,7 @@ library(rugarch)
 stock1=getSymbols("600170.SS", auto.assign=F, from="2018-01-01", to="2019-01-01", src = "yahoo")
 stock2=getSymbols("601668.SS", auto.assign=F, from="2018-01-01", to="2019-01-01", src = "yahoo")
 head(stock1)
-stock1$``600170.SS.Close``
+stock1$`600170.SS.Close`
 #Combine return
 return_s1=ROC(stock1$`600170.SS.Close`)
 return_s2=ROC(stock2$`601668.SS.Close`)
